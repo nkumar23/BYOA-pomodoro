@@ -33,8 +33,8 @@ function switchMode() {
     isWorkTime = !isWorkTime;
     minutes = isWorkTime ? workTime : breakTime;
     seconds = 0;
-    modeText.textContent = isWorkTime ? '⏱️ 👓 Focus Time' : '⏱️ 😌';
-    toggleButton.textContent = isWorkTime ? 'Rest' : 'Work';
+    modeText.textContent = isWorkTime ? 'You are in focus mode' : 'Take a break!';
+    toggleButton.textContent = isWorkTime ? '😌' : '👓';
     toggleButton.classList.toggle('work-mode', isWorkTime);
     updateDisplay();
 }
@@ -96,7 +96,7 @@ function resetTimer() {
     isWorkTime = true;
     minutes = workTime;
     seconds = 0;
-    modeText.textContent = '⏱️ 👓';
+    modeText.textContent = 'You are in focus mode';
     updateDisplay();
     stopNotification();
 }
@@ -120,4 +120,6 @@ toggleButton.addEventListener('click', handleModeToggle);
 // Initialize display
 updateDisplay();
 toggleButton.classList.add('work-mode');
-initSound(); 
+initSound();
+toggleButton.textContent = '😌';
+ 
