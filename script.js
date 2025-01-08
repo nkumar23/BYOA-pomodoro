@@ -16,6 +16,9 @@ const resetButton = document.getElementById('reset');
 const modeText = document.getElementById('mode-text');
 const toggleButton = document.getElementById('toggle-mode');
 const timerSound = document.getElementById('timer-sound');
+const accomplishmentInput = document.getElementById('accomplishment-input');
+const accomplishmentText = document.getElementById('accomplishment-text');
+const accomplishmentLog = document.getElementById('accomplishment-log');
 
 function updateDisplay() {
     const timeString = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
@@ -68,6 +71,9 @@ function startTimer() {
                     timerSound.play();
                     const message = isWorkTime ? "Break Time!" : "Time to Focus!";
                     startNotification(message);
+                    if (isWorkTime) {  // Only show input after work session
+                        showAccomplishmentInput();
+                    }
                     switchMode();
                     startTimer();
                     return;
@@ -111,6 +117,42 @@ function initSound() {
     timerSound.volume = 0.5;
     timerSound.load();
 }
+
+function showAccomplishmentInput() {
+    accomplishmentInput.classList.remove('hidden');
+    accomplishmentText.focus();
+}
+
+function logAccomplishment(text) {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    
+    const entry = document.createElement('div');
+    entry.className = 'accomplishment-entry';
+    
+    const time = document.createElement('div');
+    time.className = 'accomplishment-time';
+    time.textContent = timeString;
+    
+    const content = document.createElement('div');
+    content.className = 'accomplishment-text';
+    content.textContent = text;
+    
+    entry.appendChild(time);
+    entry.appendChild(content);
+    accomplishmentLog.insertBefore(entry, accomplishmentLog.firstChild);
+    
+    // Clear and hide input
+    accomplishmentText.value = '';
+    accomplishmentInput.classList.add('hidden');
+}
+
+// Add event listener for the input
+accomplishmentText.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && accomplishmentText.value.trim()) {
+        logAccomplishment(accomplishmentText.value.trim());
+    }
+});
 
 startButton.addEventListener('click', startTimer);
 pauseButton.addEventListener('click', pauseTimer);
