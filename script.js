@@ -5,6 +5,8 @@ let minutes = workTime;
 let isRunning = false;
 let isWorkTime = true;
 let timer;
+let originalTitle = document.title;
+let notificationInterval;
 
 const minutesDisplay = document.getElementById('minutes');
 const secondsDisplay = document.getElementById('seconds');
@@ -24,15 +26,31 @@ function switchMode() {
     isWorkTime = !isWorkTime;
     minutes = isWorkTime ? workTime : breakTime;
     seconds = 0;
-    modeText.textContent = isWorkTime ? '��️ 👓 Focus Time' : '⏱️ 😌';
+    modeText.textContent = isWorkTime ? '⏱️ 👓 Focus Time' : '⏱️ 😌';
     toggleButton.textContent = isWorkTime ? 'Rest' : 'Work';
     toggleButton.classList.toggle('work-mode', isWorkTime);
     updateDisplay();
 }
 
+function startNotification(message) {
+    clearInterval(notificationInterval);
+    let isOriginalTitle = true;
+    
+    notificationInterval = setInterval(() => {
+        document.title = isOriginalTitle ? `🔔 ${message}` : originalTitle;
+        isOriginalTitle = !isOriginalTitle;
+    }, 1000);
+}
+
+function stopNotification() {
+    clearInterval(notificationInterval);
+    document.title = originalTitle;
+}
+
 function startTimer() {
     if (!isRunning) {
         isRunning = true;
+        stopNotification();
         startButton.classList.add('running');
         timer = setInterval(() => {
             if (seconds === 0) {
@@ -40,6 +58,8 @@ function startTimer() {
                     // Timer completed
                     clearInterval(timer);
                     timerSound.play();
+                    const message = isWorkTime ? "Break Time!" : "Time to Focus!";
+                    startNotification(message);
                     switchMode();
                     startTimer();
                     return;
@@ -58,6 +78,7 @@ function pauseTimer() {
     clearInterval(timer);
     isRunning = false;
     startButton.classList.remove('running');
+    stopNotification();
 }
 
 function resetTimer() {
@@ -67,8 +88,9 @@ function resetTimer() {
     isWorkTime = true;
     minutes = workTime;
     seconds = 0;
-    modeText.textContent = '��️ 👓 Focus Time';
+    modeText.textContent = '⏱️ 👓';
     updateDisplay();
+    stopNotification();
 }
 
 function handleModeToggle() {
