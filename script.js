@@ -13,6 +13,7 @@ const pauseButton = document.getElementById('pause');
 const resetButton = document.getElementById('reset');
 const modeText = document.getElementById('mode-text');
 const toggleButton = document.getElementById('toggle-mode');
+const timerSound = document.getElementById('timer-sound');
 
 function updateDisplay() {
     minutesDisplay.textContent = String(minutes).padStart(2, '0');
@@ -38,6 +39,7 @@ function startTimer() {
                 if (minutes === 0) {
                     // Timer completed
                     clearInterval(timer);
+                    timerSound.play();
                     switchMode();
                     startTimer();
                     return;
@@ -75,6 +77,11 @@ function handleModeToggle() {
     }
 }
 
+function initSound() {
+    timerSound.volume = 0.5;
+    timerSound.load();
+}
+
 startButton.addEventListener('click', startTimer);
 pauseButton.addEventListener('click', pauseTimer);
 resetButton.addEventListener('click', resetTimer);
@@ -82,4 +89,5 @@ toggleButton.addEventListener('click', handleModeToggle);
 
 // Initialize display
 updateDisplay();
-toggleButton.classList.add('work-mode'); 
+toggleButton.classList.add('work-mode');
+initSound(); 
