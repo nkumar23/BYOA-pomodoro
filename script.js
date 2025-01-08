@@ -18,8 +18,15 @@ const toggleButton = document.getElementById('toggle-mode');
 const timerSound = document.getElementById('timer-sound');
 
 function updateDisplay() {
+    const timeString = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     minutesDisplay.textContent = String(minutes).padStart(2, '0');
     secondsDisplay.textContent = String(seconds).padStart(2, '0');
+    
+    // Only update title if there's no notification running
+    if (!notificationInterval) {
+        const modeIcon = isWorkTime ? '👓' : '😌';
+        document.title = `${timeString} ${modeIcon}`;
+    }
 }
 
 function switchMode() {
@@ -44,7 +51,8 @@ function startNotification(message) {
 
 function stopNotification() {
     clearInterval(notificationInterval);
-    document.title = originalTitle;
+    notificationInterval = null;
+    updateDisplay(); // This will update the title with current time
 }
 
 function startTimer() {
