@@ -23,7 +23,7 @@ function switchMode() {
     isWorkTime = !isWorkTime;
     minutes = isWorkTime ? workTime : breakTime;
     seconds = 0;
-    modeText.textContent = isWorkTime ? 'Work Time' : 'Break Time';
+    modeText.textContent = isWorkTime ? '��️ 👓 Focus Time' : '⏱️ 😌 Break Time';
     toggleButton.textContent = isWorkTime ? 'Rest' : 'Work';
     toggleButton.classList.toggle('work-mode', isWorkTime);
     updateDisplay();
@@ -65,7 +65,7 @@ function resetTimer() {
     isWorkTime = true;
     minutes = workTime;
     seconds = 0;
-    modeText.textContent = 'Work Time';
+    modeText.textContent = '��️ 👓 Focus Time';
     updateDisplay();
 }
 
